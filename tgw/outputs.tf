@@ -47,3 +47,18 @@ output "tgw_peering_state" {
   description = "State of the Transit Gateway peering connection"
   value       = aws_ec2_transit_gateway_peering_attachment.tgw_peering.state
 }
+
+output "spoke_route_table_id" {
+  description = "ID of the spoke route table"
+  value       = aws_ec2_transit_gateway_route_table.spoke_rt.id
+}
+
+output "inspection_route_table_id" {
+  description = "ID of the inspection route table"
+  value       = aws_ec2_transit_gateway_route_table.inspection_rt.id
+}
+
+output "vpc_dev_attachment_id" {
+  description = "ID of the development VPC attachment"
+  value       = aws_ec2_transit_gateway_vpc_attachment.vpc_dev_attachment.id
+}

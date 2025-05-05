@@ -175,3 +175,25 @@ resource "aws_route_table_association" "private_rt_association" {
   subnet_id      = aws_subnet.inspection_private_subnets[count.index].id
   route_table_id = aws_route_table.inspection_private_rt[count.index].id
 }
+
+
+# Create Transit Gateway attachment for the inspection VPC
+#resource "aws_ec2_transit_gateway_vpc_attachment" "inspection_vpc_attachment" {
+# provider           = aws.delegated_account_us-west-2
+# subnet_ids         = aws_subnet.inspection_tgw_subnets[*].id
+# transit_gateway_id = var.transit_gateway_id
+# vpc_id             = aws_vpc.inspection_vpc.id
+  
+# appliance_mode_support = "enable"
+  
+# tags = {
+#   Name = "inspection-vpc-tgw-attachment"
+# }
+#}
+
+# Associate the inspection VPC attachment with the TGW route table
+resource "aws_ec2_transit_gateway_route_table_association" "inspection_vpc_rt_association" {
+  provider                       = aws.delegated_account_us-west-2
+  transit_gateway_attachment_id  = aws_ec2_transit_gateway_vpc_attachment.inspection_vpc_attachment.id
+  transit_gateway_route_table_id = var.transit_gateway_route_table_id
+}

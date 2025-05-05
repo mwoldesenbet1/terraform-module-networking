@@ -76,3 +76,28 @@ variable "rsm_vpn" {
   type        = string
   default     = "0.0.0.0/0" 
 }
+
+variable "vpc_dev_id" {
+  description = "ID of the development VPC in us-west-2"
+  type        = string
+}
+
+variable "vpc_dev_subnet_ids" {
+  description = "IDs of subnets in us-west-2 development VPC for TGW attachment"
+  type        = list(string)
+}
+
+variable "vpc_dev_cidr" {
+  description = "CIDR block of the development VPC in us-west-2"
+  type        = string
+}
+
+variable "vpc_dev_route_table_ids" {
+  description = "IDs of the route tables in us-west-2 development VPC"
+  type        = map(string)
+}
+
+variable "inspection_vpc_attachment_id" {
+  description = "ID of the inspection VPC attachment to Transit Gateway"
+  type        = string
+}

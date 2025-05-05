@@ -76,7 +76,60 @@ resource "aws_route_table" "private_rt_east" {
   }
 }
 
-# Route Table Associations remain the same
+# Public Route Table for dev VPC
+resource "aws_route_table" "public_rt_dev" {
+  provider = aws.delegated_account_us-west-2
+  vpc_id   = aws_vpc.vpc_dev.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw_dev.id
+  }
+
+  tags = {
+    Name        = "${var.vpc_names["us-west-2-dev"]}-public-rt"
+    Environment = "Development"
+  }
+
+  lifecycle {
+    ignore_changes = [route]
+  }
+}
+
+# Private Route Table for dev VPC
+resource "aws_route_table" "private_rt_dev" {
+  provider = aws.delegated_account_us-west-2
+  vpc_id   = aws_vpc.vpc_dev.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gw_dev.id
+  }
+
+  tags = {
+    Name        = "${var.vpc_names["us-west-2-dev"]}-private-rt"
+    Environment = "Development"
+  }
+
+  lifecycle {
+    ignore_changes = [route]
+  }
+}
+
+# Route Table Associations for dev VPC
+resource "aws_route_table_association" "public_rta_dev" {
+  provider       = aws.delegated_account_us-west-2
+  subnet_id      = aws_subnet.subnet_dev[0].id
+  route_table_id = aws_route_table.public_rt_dev.id
+}
+
+resource "aws_route_table_association" "private_rta_dev" {
+  provider       = aws.delegated_account_us-west-2
+  subnet_id      = aws_subnet.subnet_dev[1].id
+  route_table_id = aws_route_table.private_rt_dev.id
+}
+
+# Route Table Associations 
 resource "aws_route_table_association" "public_rta_west" {
   provider       = aws.delegated_account_us-west-2
   subnet_id      = aws_subnet.subnet_west[0].id

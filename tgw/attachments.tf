@@ -36,6 +36,19 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpc_east_attachment" {
   }
 }
 
+# Create attachment for development VPC
+resource "aws_ec2_transit_gateway_vpc_attachment" "vpc_dev_attachment" {
+  provider = aws.delegated_account_us-west-2
+  
+  subnet_ids         = var.vpc_dev_subnet_ids
+  transit_gateway_id = aws_ec2_transit_gateway.tgw.id
+  vpc_id             = var.vpc_dev_id
+  
+  tags = {
+    Name = "tgw-attachment-${var.vpc_names["us-west-2-dev"]}"
+  }
+}
+
 #Enable route propagation
 
 resource "aws_ec2_transit_gateway_route_table_propagation" "west_to_tgw" {

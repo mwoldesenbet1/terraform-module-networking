@@ -41,3 +41,26 @@ output "inspection_tgw_subnet_ids" {
   value       = aws_subnet.inspection_tgw_subnets[*].id
 }
 
+
+output "network_firewall_id" {
+  description = "ID of the Network Firewall"
+  value       = aws_networkfirewall_firewall.inspection_firewall.id
+}
+
+output "network_firewall_arn" {
+  description = "ARN of the Network Firewall"
+  value       = aws_networkfirewall_firewall.inspection_firewall.arn
+}
+
+output "network_firewall_endpoints" {
+  description = "Map of AZ to Network Firewall endpoint ID"
+  value       = {
+    for state in aws_networkfirewall_firewall.inspection_firewall.firewall_status[0].sync_states :
+    state.availability_zone => state.attachment[0].endpoint_id
+  }
+}
+
+output "network_firewall_policy_arn" {
+  description = "ARN of the Network Firewall policy"
+  value       = aws_networkfirewall_firewall_policy.inspection_policy.arn
+}
